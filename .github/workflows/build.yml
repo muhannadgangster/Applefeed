@@ -58,7 +58,9 @@ jobs:
             echo "Debug keystore generated successfully."
           fi
 
-      - name: Build debug APK
+      - name: Build the debug APK
+        env:
+          GRADLE_OPTS: "-Djava.awt.headless=true"
         run: |
           if [ -f "./gradlew" ]; then
             chmod +x ./gradlew
