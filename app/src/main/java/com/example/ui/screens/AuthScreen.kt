@@ -94,7 +94,6 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
-import com.example.R
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.Firebase
@@ -923,7 +922,33 @@ fun onGoogleSignInClicked(
     onAuthCancelled: () -> Unit = {}
 ) {
     val clientId = try {
-        context.getString(R.string.default_web_client_id)
+        val resId = context.resources.getIdentifier(
+            "default_web_client_id",
+            "string",
+            context.packageName
+        ).let { id ->
+            if (id == 0) {
+                context.resources.getIdentifier(
+                    "default_web_client_id",
+                    "string",
+                    context.applicationContext.packageName
+                )
+            } else id
+        }.let { id ->
+            if (id == 0) {
+                context.resources.getIdentifier(
+                    "default_web_client_id",
+                    "string",
+                    "com.example"
+                )
+            } else id
+        }
+
+        if (resId != 0) {
+            context.getString(resId)
+        } else {
+            throw IllegalStateException("Resource 'default_web_client_id' not found in package resources")
+        }
     } catch (e: Exception) {
         onAuthError("Google Sign-In configuration missing: default_web_client_id not found")
         return

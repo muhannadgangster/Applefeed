@@ -88,6 +88,8 @@ jobs:
           fi
 
       - name: Build the debug APK
+        env:
+          GRADLE_OPTS: "-Djava.awt.headless=true"
         run: gradle :app:assembleDebug --stacktrace --no-daemon
 
       - name: Verify the APK
